@@ -7,17 +7,31 @@
 	var a = ["loginView", "evaluationView", "updateSuccessView"];
     var c = {};
     for (var i=0;i<a.length;i+=1){
-		var b = $("scrip#"+a[i]).html();
+		var b = $("script#"+a[i]).html();
 		c[a[i]]= doT.template(b);
     }
     
 	var handler = {
 		navbar函數: function(){
-			if(登入狀況){
-				顯示哪些button();
+			var currentUser = Parse.User.current();
+			if (currentUser) {
+				// do stuff with the user
+				$("#loginButton").css("display","none");
+				$("#logoutButton").css("display","block");
+				$("#evaluationButton").css("display","block");
 			} else {
-				顯示哪些button(); 
+				// show the signup or login page
+				$("#loginButton").css("display","block");
+				$("#logoutButton").css("display","none");
+				$("#evaluationButton").css("display","none");
 			}
+           
+            $("#logoutButton").click(function(){
+            	$("#loginButton").css("display","block");
+				$("#logoutButton").css("display","none");
+				$("#evaluationButton").css("display","none");
+            });
+
 		}
 
 登入view函數: function(){
