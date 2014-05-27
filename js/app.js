@@ -11,14 +11,15 @@
 		c[a[i]]= doT.template(b);
     }
     
-var handler = {
-navbar函數: function(){
-if(登入狀況){
-顯示哪些button();
-} else {
-顯示哪些button(); 
-}
-}
+	var handler = {
+		navbar函數: function(){
+			if(登入狀況){
+				顯示哪些button();
+			} else {
+				顯示哪些button(); 
+			}
+		}
+
 登入view函數: function(){
 把版型印到瀏覽器上();
 綁定登入表單的學號檢查事件(); // 可以利用TAHelp物件
