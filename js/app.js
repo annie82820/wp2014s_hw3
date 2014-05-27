@@ -12,7 +12,7 @@
     }
     
 	var handler = {
-		navbar函數: function(){
+		navbar: function(){
 			var currentUser = Parse.User.current();
 			if (currentUser) {
 				// do stuff with the user
@@ -34,7 +34,7 @@
 
 		}
 
-登入view函數: function(){
+/*登入view函數: function(){
 把版型印到瀏覽器上();
 綁定登入表單的學號檢查事件(); // 可以利用TAHelp物件
 綁定註冊表單的學號檢查事件(); // 可以利用TAHelp物件
@@ -49,14 +49,14 @@
 把peer review物件裡的東西透過版型印到瀏覽器上();
 綁定表單送出的事件(); // 如果Parse沒有之前提交過的peer review物件，要自己new一個。或更新分數然後儲存。
 );
-},
+},*/
 };
-var router = {
-‘’: handler.登入view函數,
-‘peer-evaluation’: handler.評分view函數. 
-};
+var router = Parse.Router.extend({
+'': handler.登入view函數,
+/*peer-evaluation’: handler.評分view函數.*/ 
+});
 
-讓router活起來();
+handler.navbar();
 
 
 
