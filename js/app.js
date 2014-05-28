@@ -74,7 +74,7 @@ var router = Parse.Router.extend({
 
 handler.navbar();
 this.router=router;
-parse.history.start();
+Parse.history.start();
 
 
 })();
