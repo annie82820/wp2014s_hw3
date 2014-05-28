@@ -43,9 +43,10 @@
 				if (TAHelp.getMemberlistOf(ID) === false ){
 					$("#form-signin-message").css("display","block");
 					$("#form-signin-message").html("The student is not one of the class students.");
-
+				}	
+				else{
+					$("#form-signin-message").css("display","none");
 				}
-
 			});
 		}
 
