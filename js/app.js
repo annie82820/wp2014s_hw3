@@ -91,7 +91,7 @@
 				});
 		    });
 		    $("#form-signin").submit(function(){
-		    	Parse.User.logIn("myname", "mypass", {
+		    	Parse.User.logIn($("#form-signin-student-id").val();, $("#form-signup-password").val();, {
   					success: function(user) {
 =  					},
   					error: function(user, error) {
