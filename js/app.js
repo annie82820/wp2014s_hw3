@@ -64,7 +64,7 @@
 				var password = $("#form-signup-password").val();
 				var password1 = $("#form-signup-password1").val();
 
-				if (password != pssword1){
+				if (password != password1){
 					$("#form-signup-message").css("display","block");
 					$("#form-signup-message").html("Passwords don't match.");
 				}
