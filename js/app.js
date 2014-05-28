@@ -83,10 +83,12 @@
 					success: function(user) {
 				    	// Hooray! Let them use the app now.
 				    	handler.navbar();
+				    	window.location = "?#peer-evaluation/";
 					},
 					error: function(user, error) {
 				    	// Show the error message somewhere and let the user try again.
 		     			alert("Error: " + error.code + " " + error.message);
+						window.location = "?#login/";
 					}
 				});
 		    });
@@ -94,10 +96,12 @@
 		    	Parse.User.logIn($("#form-signin-student-id").val(), $("#form-signup-password").val(), {
   					success: function(user) {
   						handler.navbar();
+  						window.location = "?#peer-evaluation/";
 
   					},
   					error: function(user, error) {
   						alert("Error: " + error.code + " " + error.message);
+  						window.location = "?#login/";
  					}
  				});
 			});
