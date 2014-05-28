@@ -99,6 +99,7 @@
   					error: function(user, error) {
   						alert("Error: " + error.code + " " + error.message);
  					}
+ 				});
 			});
 		}
 
