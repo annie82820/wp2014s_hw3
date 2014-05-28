@@ -96,9 +96,7 @@
 =  					},
   					error: function(user, error) {
  					}
-				});
-
-		    });
+			});
 		}
 
 
