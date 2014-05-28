@@ -72,6 +72,24 @@
 					$("#form-signup-message").css("display","none");
 				}
 			});
+
+		    $("#form-signup").submit(function(){
+		    	var user = new Parse.User();
+				user.set("username",$("#form-signup-student-id").val());
+				user.set("password",$("#form-signup-password").val());
+				user.set("email",$("#form-signup-email").val());
+				 
+				user.signUp(null, {
+					success: function(user) {
+				    	// Hooray! Let them use the app now.
+				    	handler.navbar();
+					},
+					error: function(user, error) {
+				    	// Show the error message somewhere and let the user try again.
+		     			alert("Error: " + error.code + " " + error.message);
+					}
+				});
+		    });
 		}
 
 
