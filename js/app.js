@@ -70,6 +70,7 @@
 				}
 				else{
 					$("#form-signup-message").css("display","none");
+				}	
 			});
 		}
 
