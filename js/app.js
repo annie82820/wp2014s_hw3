@@ -36,10 +36,9 @@
 		loginView: function(){
 			//Show the login content on browser
 			$("#content").html(c['loginView']);
-			
 			//check if student ID has been entered in login form
 			
-			}
+		}
 
 /*登入view函數: function(){
 把版型印到瀏覽器上();s
