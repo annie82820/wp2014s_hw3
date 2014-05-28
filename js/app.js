@@ -93,8 +93,11 @@
 		    $("#form-signin").submit(function(){
 		    	Parse.User.logIn($("#form-signin-student-id").val();, $("#form-signup-password").val();, {
   					success: function(user) {
-=  					},
+  						handler.navbar();
+
+  					},
   					error: function(user, error) {
+  						alert("Error: " + error.code + " " + error.message);
  					}
 			});
 		}
