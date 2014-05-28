@@ -106,75 +106,7 @@
  				});
 			});
 
-		evaluationView: function(){
-			var evaluation = Parse.Object.extend("Evaluation");
-			var query = new Parse.Query(evaluation);
-			query.first({
-				success: function(data){
-					var current_user = Parse.User.current();
-					var member = TAHelp.getMemberlistOf(current_user.getUsername());
-						
-					for(var i = 0;i < member.length;i++){
-						if(data === undefined){
-							member[i]["scores"] = new Array("0", "0", "0", "0");
-						}
-						else{
-							member = data.get("evaluation").slice(0);
-							break;
-						}
-						if(member[i].StudentId===current_user.getUsername()){
-							member.splice(i, 1);
-							i--;
-						}
-						
-					}
-					
-					document.getElementById("content").innerHTML = (compiled.evaluationView(member));
-					for(var i = 0;i < 4;i++){
-						for(var j = 0;j < 3;j++){
-							$("stu"+member.StudentId+"-q"+j.toString()).val(member[i].scores[j]);
-						}
-					}
-					document.getElementById('evaluationForm').addEventListener('submit', function(){
-						for(var i = 0;i < member.length;i++){
-							var total = 0;
-							for(var j = 0;j < 4; j++){
-								var tmp_score = $("#stu"+member[i]["StudentId"]+"-q"+j.toString()).val();
-								member[i]["scores"][j] = tmp_score; 
-							}
-						}
-						var changed = new evaluation();
-						changed.set("user",Parse.User.current());
-						changed.set("evaluation",data.get("evaluation").slice(0));
-						if(originData === undefined){
-							changed.save(null, {
-								success: function(changed){
-									console.log("New row added!!");
-									document.getElementById("content").innerHTML = (compiled.updateSuccessView());
-								},
-								error: function(changed, error){
-									alert("Error:" + error.code + " " + error.message);
-								}
-							});
-						}
-						else{
-							changed.save(null, {
-								success: function(changed){
-									changed.set("evaluation", member);
-									changed.save();
-									console.log("Data changed.");
-									document.getElementById("content").innerHTML = (compiled.updateSuccessView());
-								}
-							});
-						}	
-					});
-				},
-				error: function(data, error){
-					alert("Error:" + error.code + " " + error.message);
-				}
-			});
-		}
-	};
+		
 		}
 
 
