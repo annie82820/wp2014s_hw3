@@ -31,11 +31,28 @@
 				$("#logoutButton").css("display","none");
 				$("#evaluationButton").css("display","none");
             });
+		},
 
-		}
+		loginView: function(){
+			//Show the login content on browser
+			var content = document.getElementById("content");
+			content.innerHTML = compiled["loginView"]();
+			
+			//check if student ID has been entered in login form
+			document.getElementById("form-signin-student-id").addEventListener("keyup", function(){
+				var loginStudentID = this.value;
+				if(TAHelp.getMemberlistOf(loginStudentID)==false){
+					document.getElementById("form-signin-message").style.display = "block";
+					document.getElementById("form-signin-message").innerHTML = "<p>The student is not one of the class students.</p>"
+				}
+				else{
+					document.getElementById("form-signin-message").style.display = "none";
+				}
+			});
+			
 
 /*登入view函數: function(){
-把版型印到瀏覽器上();
+把版型印到瀏覽器上();s
 綁定登入表單的學號檢查事件(); // 可以利用TAHelp物件
 綁定註冊表單的學號檢查事件(); // 可以利用TAHelp物件
 綁定註冊表單的密碼檢查事件(); // 參考上課範例
