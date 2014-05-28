@@ -48,7 +48,7 @@
 					document.getElementById("form-signin-message").style.display = "none";
 				}
 			});
-			
+			}
 
 /*登入view函數: function(){
 把版型印到瀏覽器上();s
