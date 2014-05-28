@@ -48,6 +48,19 @@
 					$("#form-signin-message").css("display","none");
 				}
 			});
+
+			$("#form-signup-student-id").keyup(function(){
+				var  ID = $("#form-signup-student-id").val();
+				if (TAHelp.getMemberlistOf(ID) === false ){
+					$("#form-signup-message").css("display","block");
+					$("#form-signup-message").html("The student is not one of the class students.");
+				}	
+				else{
+					$("#form-signup-message").css("display","none");
+				}
+			});
+
+
 		}
 
 
