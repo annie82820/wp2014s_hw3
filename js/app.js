@@ -68,12 +68,13 @@
 },*/
 };
 var router = Parse.Router.extend({
-'': handler.登入view函數,
+'': handler.loginView,
 /*peer-evaluation’: handler.評分view函數.*/ 
 });
 
 handler.navbar();
-
+this.router=router;
+parse.history.start();
 
 
 })();
