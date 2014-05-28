@@ -38,16 +38,7 @@
 			$("#content").html(c['loginView']);
 			
 			//check if student ID has been entered in login form
-			document.getElementById("form-signin-student-id").addEventListener("keyup", function(){
-				var loginStudentID = this.value;
-				if(TAHelp.getMemberlistOf(loginStudentID)==false){
-					document.getElementById("form-signin-message").style.display = "block";
-					document.getElementById("form-signin-message").innerHTML = "<p>The student is not one of the class students.</p>"
-				}
-				else{
-					document.getElementById("form-signin-message").style.display = "none";
-				}
-			});
+			
 			}
 
 /*登入view函數: function(){
