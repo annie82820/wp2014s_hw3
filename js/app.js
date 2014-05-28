@@ -67,11 +67,8 @@
 				if (password != pssword1){
 					$("#form-signup-message").css("display","block");
 					$("#form-signup-message").html("Passwords don't match.");
-
 				}
-
-
-
+			});
 		}
 
 
