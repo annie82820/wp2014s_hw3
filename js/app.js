@@ -35,8 +35,7 @@
 
 		loginView: function(){
 			//Show the login content on browser
-			var content = document.getElementById("content");
-			content.innerHTML = compiled["loginView"]();
+			$("#content").html(c['loginView']);
 			
 			//check if student ID has been entered in login form
 			document.getElementById("form-signin-student-id").addEventListener("keyup", function(){
