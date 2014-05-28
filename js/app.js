@@ -67,14 +67,19 @@
 );
 },*/
 };
-var router = Parse.Router.extend({
-'': handler.loginView,
-/*peer-evaluation’: handler.評分view函數.*/ 
-});
-
-handler.navbar();
-this.router=router;
-Parse.history.start();
-
-
+	var Router = Parse.Router.extend({
+		routes: {
+		"": "loginView",
+		"peer-evaluation/": "evaluationView",
+		"login/*redirect": "loginView",
+		},
+		indexView: handler.evaluationView,
+		evaluationView: handler.evaluationView,
+		loginView: handler.loginView,
+	});
+	
+	handler.navbar();
+	this.Router = new Router();
+	Parse.history.start();
+	
 })();
