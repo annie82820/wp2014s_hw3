@@ -68,6 +68,8 @@
 					$("#form-signup-message").css("display","block");
 					$("#form-signup-message").html("Passwords don't match.");
 				}
+				else{
+					$("#form-signup-message").css("display","none");
 			});
 		}
 
