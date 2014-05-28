@@ -35,10 +35,20 @@
 
 		loginView: function(){
 			//Show the login content on browser
-			$("#content").html(c['loginView']);
+			$("#content").html(c['loginView']);	
+		
 			//check if student ID has been entered in login form
-			
+			$("#form-signin-student-id").keyup(function(){
+				var  ID = $("#form-signin-student-id").val();
+				if (TAHelp.getMemberlistOf(ID) === false ){
+					$("#form-signin-message").css("display","block");
+					$("#form-signin-message").html("The student is not one of the class students.");
+
+				}
+
+			});
 		}
+
 
 /*登入view函數: function(){
 把版型印到瀏覽器上();s
