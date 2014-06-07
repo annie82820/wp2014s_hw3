@@ -1,189 +1,192 @@
 (function(){
+	//Parse initialization
+	Parse.initialize("3Q0fl5PFmawluhNowBEogxyOlhLFIp2YTS5s5TBy", "HWWfH7Aa4E0CXz5IS0WAlQxCUMVVlbkdiEBQL7lV");
+	
+	//Compile template engine function
+	var compiled = {};
+	var views = ["loginView", "evaluationView", "updateSuccessView"];
+	for(var i = 0;i < views.length;i++){
+			var view_text = document.getElementById(views[i]).text;
+			compiled[views[i]] = doT.template(view_text);
+	}
 
-//Parse initialization
-	Parse.initialize("60ud03N7lNt4Eke13GPYxxjfJalEXyxzG8HvQdgz", "iAqPxovNSsMcSNZWQcTEB3TeWW5z7ynP3quQ3Vr2");
-
-	//編譯template engine函數();
-	var a = ["loginView", "evaluationView", "updateSuccessView"];
-    var c = {};
-    for (var i=0;i<a.length;i+=1){
-		var b = $("script#"+a[i]).html();
-		c[a[i]]= doT.template(b);
-    }
-    
+	//Shared function
+			
 	var handler = {
 		navbar: function(){
-			var currentUser = Parse.User.current();
-			if (currentUser) {
-				// do stuff with the user
-				$("#loginButton").css("display","none");
-				$("#logoutButton").css("display","block");
-				$("#evaluationButton").css("display","block");
-			} else {
-				// show the signup or login page
-				$("#loginButton").css("display","block");
-				$("#logoutButton").css("display","none");
-				$("#evaluationButton").css("display","none");
+			var users = Parse.User.current();
+			var loginButton = $("#loginButton");
+			var evaluationButton = $("#evaluationButton");
+			var logoutButton = $("#logoutButton");
+			if(users==null){
+				loginButton.css("display", "block");
+				evaluationButton.css("display", "none");
+				logoutButton.css("display", "none");
 			}
-           
-            $("#logoutButton").click(function(){
-            	$("#loginButton").css("display","block");
-				$("#logoutButton").css("display","none");
-				$("#evaluationButton").css("display","none");
-            });
+			else{
+				loginButton.css("display", "none");
+				evaluationButton.css("display", "block");
+				logoutButton.css("display", "block");
+			}
+			
+			logoutButton.click(function(){
+				Parse.User.logOut();
+				loginButton.css("display", "block");
+				evaluationButton.css("display", "none");
+				logoutButton.css("display", "none");
+				window.location = "?#login/";
+			});
 		},
-
 		loginView: function(){
 			//Show the login content on browser
-			$("#content").html(c['loginView']);	
-		
+			var content = document.getElementById("content");
+			content.innerHTML = compiled["loginView"]();
+			
 			//check if student ID has been entered in login form
-			$("#form-signin-student-id").keyup(function(){
-				var  ID = $("#form-signin-student-id").val();
-				if (TAHelp.getMemberlistOf(ID) === false ){
-					$("#form-signin-message").css("display","block");
-					$("#form-signin-message").html("The student is not one of the class students.");
+			document.getElementById("form-signin-student-id").addEventListener("keyup", function(){
+				var loginStudentID = this.value;
+				if(TAHelp.getMemberlistOf(loginStudentID)==false){
+					document.getElementById("form-signin-message").style.display = "block";
+					document.getElementById("form-signin-message").innerHTML = "<p>The student is not one of the class students.</p>"
+				}
+				else{
+					document.getElementById("form-signin-message").style.display = "none";
+				}
+			});
+			
+			//check if student ID has been entered in sign up form
+			document.getElementById("form-signup-student-id").addEventListener("keyup", function(){
+				var signupStudentID = this.value;
+				if(TAHelp.getMemberlistOf(signupStudentID)==false){
+					document.getElementById("form-signup-message").style.display = "block";
+					document.getElementById("form-signup-message").innerHTML = "<p>The student is not one of the class students.</p>"
+				}
+				else{
+					document.getElementById("form-signup-message").style.display = "none";
+				}
+			});
+			
+			//check password correctness in sign up form
+			document.getElementById("form-signup-password1").addEventListener("keyup", function(){
+				var signupPwd = document.getElementById("form-signup-password").value;
+				var signupPwdRepeat = this.value;
+				if(signupPwd != signupPwdRepeat){
+					document.getElementById("form-signup-message").style.display = "block";
+					document.getElementById("form-signup-message").innerHTML = "<p>Passwords don't match.</p>"
+				}
+				else{
+					document.getElementById("form-signup-message").style.display = "none";
 				}	
-				else{
-					$("#form-signin-message").css("display","none");
-				}
 			});
-
-			$("#form-signup-student-id").keyup(function(){
-				var  ID = $("#form-signup-student-id").val();
-				if (TAHelp.getMemberlistOf(ID) === false ){
-					$("#form-signup-message").css("display","block");
-					$("#form-signup-message").html("The student is not one of the class students.");
-				}	
-				else{
-					$("#form-signup-message").css("display","none");
-				}
+			
+			//check if student ID and password is correct in log in form
+			document.getElementById('form-signin').addEventListener('submit', function(){
+				Parse.User.logIn(
+					document.getElementById('form-signin-student-id').value,
+					document.getElementById('form-signin-password').value, 
+					{
+						success: function(user) {
+							handler.navbar();
+							window.location = "?#peer-evaluation/";
+						}, 
+						error: function(user, error) {
+							alert("Error:" + error.code + " " + error.message);
+							window.location = "?#login/";
+						}
+					}
+				);
 			});
-
-			$("#form-signup-password1").keyup(function(){
-				var password = $("#form-signup-password").val();
-				var password1 = $("#form-signup-password1").val();
-
-				if (password != password1){
-					$("#form-signup-message").css("display","block");
-					$("#form-signup-message").html("Passwords don't match.");
-				}
-				else{
-					$("#form-signup-message").css("display","none");
-				}
-			});
-
-		    $("#form-signup").submit(function(){
-		    	var user = new Parse.User();
-				user.set("username",$("#form-signup-student-id").val());
-				user.set("password",$("#form-signup-password").val());
-				user.set("email",$("#form-signup-email").val());
-				 
+			
+			//check if student ID and password is correct in sign up form
+			document.getElementById('form-signup').addEventListener('submit', function(){
+				var user = new Parse.User();
+				user.set("username", document.getElementById("form-signup-student-id").value);
+				user.set("password", document.getElementById("form-signup-password").value);
+				user.set("email", document.getElementById("form-signup-email").value);
+				
 				user.signUp(null, {
-					success: function(user) {
-				    	// Hooray! Let them use the app now.
-				    	handler.navbar();
-				    	window.location = "?#peer-evaluation/";
+					success: function(user){
+						handler.navbar();
+						window.location = "?#peer-evaluation/";
 					},
-					error: function(user, error) {
-				    	// Show the error message somewhere and let the user try again.
-		     			alert("Error: " + error.code + " " + error.message);
+					error: function(user, error){
+						alert("Error:" + error.code + " " + error.message);
 						window.location = "?#login/";
 					}
 				});
-		    });
-		    $("#form-signin").submit(function(){
-		    	Parse.User.logIn($("#form-signin-student-id").val(), $("#form-signup-password").val(), {
-  					success: function(user) {
-  						handler.navbar();
-  						window.location = "?#peer-evaluation/";
-
-  					},
-  					error: function(user, error) {
-  						alert("Error: " + error.code + " " + error.message);
-  						window.location = "?#login/";
- 					}
- 				});
 			});
-		}
-
-
-var n={
-		navbar:function(){
-			var e=Parse.User.current();
-			if(e){
-				document.getElementById("loginButton").style.display="none";
-				document.getElementById("logoutButton").style.display="block";
-				document.getElementById("evaluationButton").style.display="block"
-			}else{
-				document.getElementById("loginButton").style.display="block";
-				document.getElementById("logoutButton").style.display="none";
-				document.getElementById("evaluationButton").style.display="none"
-			}
-			document.getElementById("logoutButton").addEventListener("click",function(){
-				Parse.User.logOut();
-				n.navbar();
-				window.location.hash="login/"
-			})
 		},
-		evaluationView:t.loginRequiredView(function(){
-			var t=Parse.Object.extend("Evaluation");
-			var n=Parse.User.current();
-			var r=new Parse.ACL;
-			r.setPublicReadAccess(false);
-			r.setPublicWriteAccess(false);
-			r.setReadAccess(n,true);
-			r.setWriteAccess(n,true);
-			var i=new Parse.Query(t);
-			i.equalTo("user",n);
-			i.first(
-				{success:function(i){
-					window.EVAL=i;
-					if(i===undefined){
-						var s=TAHelp.getMemberlistOf(n.get("username")).filter(function(e){
-							return e.StudentId!==n.get("username")?true:false
-						}).map(function(e){
-							e.scores=["0","0","0","0"];
-							return e})
-					}else{
-						var s=i.toJSON().evaluations
+		evaluationView: function(){
+			var evaluation = Parse.Object.extend("Evaluation");
+			var query = new Parse.Query(evaluation);
+			query.first({
+				success: function(data){
+					var current_user = Parse.User.current();
+					var member = TAHelp.getMemberlistOf(current_user.getUsername());
+						
+					for(var i = 0;i < member.length;i++){
+						if(data === undefined){
+							member[i]["scores"] = new Array("0", "0", "0", "0");
+						}
+						else{
+							member = data.get("evaluation").slice(0);
+							break;
+						}
+						if(member[i].StudentId===current_user.getUsername()){
+							member.splice(i, 1);
+							i--;
+						}
+						
 					}
-					document.getElementById("content").innerHTML=e.evaluationView(s);
-					document.getElementById("evaluationForm-submit").value=i===undefined?"送出表單":"修改表單";
-					document.getElementById("evaluationForm").addEventListener("submit",function(){
-						for(var o=0;o<s.length;o++){
-							for(var u=0;u<s[o].scores.length;u++){
-								var a=document.getElementById("stu"+s[o].StudentId+"-q"+u);
-								var f=a.options[a.selectedIndex].value;
-								s[o].scores[u]=f
+					
+					document.getElementById("content").innerHTML = (compiled.evaluationView(member));
+					for(var i = 0;i < 4;i++){
+						for(var j = 0;j < 3;j++){
+							$("stu"+member.StudentId+"-q"+j.toString()).val(member[i].scores[j]);
+						}
+					}
+					document.getElementById('evaluationForm').addEventListener('submit', function(){
+						for(var i = 0;i < member.length;i++){
+							var total = 0;
+							for(var j = 0;j < 4; j++){
+								var tmp_score = $("#stu"+member[i]["StudentId"]+"-q"+j.toString()).val();
+								member[i]["scores"][j] = tmp_score; 
 							}
 						}
-						if(i===undefined){
-							i=new t;
-							i.set("user",n);
-							i.setACL(r)
+						var changed = new evaluation();
+						changed.set("user",Parse.User.current());
+						changed.set("evaluation",data.get("evaluation").slice(0));
+						if(originData === undefined){
+							changed.save(null, {
+								success: function(changed){
+									console.log("New row added!!");
+									document.getElementById("content").innerHTML = (compiled.updateSuccessView());
+								},
+								error: function(changed, error){
+									alert("Error:" + error.code + " " + error.message);
+								}
+							});
 						}
-						console.log(s);
-						i.set("evaluations",s);
-						i.save(null,
-							{success:function(){
-								document.getElementById("content").innerHTML=e.updateSuccessView()
-							},error:function(){}})},false)
+						else{
+							changed.save(null, {
+								success: function(changed){
+									changed.set("evaluation", member);
+									changed.save();
+									console.log("Data changed.");
+									document.getElementById("content").innerHTML = (compiled.updateSuccessView());
+								}
+							});
+						}	
+					});
 				},
-				error:function(e,t){}})
-		}),
-		loginView:function(t){
-			var r=function(e){
-				var t=document.getElementById(e).value;
-				return TAHelp.getMemberlistOf(t)===false?false:true};
-				var i=function(e,t,n){if(!t()){
-					document.getElementById(e).innerHTML=n;
-					document.getElementById(e).style.display="block"
-				}else{
-					document.getElementById(e).style.display="none"
+				error: function(data, error){
+					alert("Error:" + error.code + " " + error.message);
 				}
-		};
-	var s=function(){
+			});
+		}
+	};
+	
+var s=function(){
 		n.navbar();
 		window.location.hash=t?t:""
 	};
@@ -245,37 +248,13 @@ var n={
 			"":"indexView",
 			"peer-evaluation/":"evaluationView",
 			"login/*redirect":"loginView"
-
-/*登入view函數: function(){
-把版型印到瀏覽器上();s
-綁定登入表單的學號檢查事件(); // 可以利用TAHelp物件
-綁定註冊表單的學號檢查事件(); // 可以利用TAHelp物件
-綁定註冊表單的密碼檢查事件(); // 參考上課範例
-綁定登入表單的登入檢查事件(); // 送出還要再檢查一次，這裡會用Parse.User.logIn
-綁定註冊表單的註冊檢查事件(); // 送出還要再檢查一次，這裡會用Parse.User.signUp和相關函數
-},
-評分view函數: function(){
-// 基本上和上課範例購物車的函數很相似，這邊會用Parse DB
-問看看Parse有沒有這個使用者之前提交過的peer review物件(
-沒有的話: 從TAHelp生一個出來(加上scores: [‘0’, ‘0’, ‘0’, ‘0’]屬性存分數並把自己排除掉)
-把peer review物件裡的東西透過版型印到瀏覽器上();
-綁定表單送出的事件(); // 如果Parse沒有之前提交過的peer review物件，要自己new一個。或更新分數然後儲存。
-);
-},*/
-};
-	var Router = Parse.Router.extend({
-		routes: {
-		"": "loginView",
-		"peer-evaluation/": "evaluationView",
-		"login/*redirect": "loginView",
 		},
-		indexView: handler.evaluationView,
-		evaluationView: handler.evaluationView,
-		loginView: handler.loginView,
+		indexView:n.evaluationView,
+		evaluationView:n.evaluationView,
+		loginView:n.loginView
 	});
 	
-	handler.navbar();
-	this.Router = new Router();
+	this.Router=new r;
 	Parse.history.start();
-	
-})();
+	n.navbar()
+})()
